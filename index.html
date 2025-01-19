@@ -17,6 +17,7 @@
             justify-content: center;
             height: 100vh;
             text-align: center;
+            visibility: hidden; /* Ukryj zawartość na początku */
         }
         h1 {
             font-size: 3em;
@@ -26,9 +27,6 @@
         p {
             font-size: 1.5em;
             animation: fadeIn 2s 0.5s;
-        }
-        .hidden {
-            display: none;
         }
         .footer {
             position: absolute;
@@ -65,15 +63,9 @@
 <body>
 
     <h1>Witaj na stronie DJ Lady!</h1>
-    <p>nazywam się nadia zanana jako DJ LADY, ma 16 lat i jest gotowa na podbicie sceny muzycznej!</p>
+    <p>DJ Lady, znana jako Nadia, ma 16 lat i jest gotowa na podbicie sceny muzycznej!</p>
 
-    <div id="access">
-        <input type="text" id="betaCode" placeholder="Wpisz kod beta">
-        <button onclick="checkCode()">Zatwierdź</button>
-        <p id="message" class="hidden">Strona jest nie publiczna, wpisz kod beta aby zobaczyć!</p>
-    </div>
-
-    <div class="hidden" id="content">
+    <div id="content" style="display: none;">
         <p>Oto zawartość strony DJ Lady!</p>
         <div class="social-buttons">
             <a href="https://discord.com" target="_blank">Discord</a>
@@ -87,18 +79,22 @@
     </div>
 
     <script>
+        // Funkcja do sprawdzania kodu
         function checkCode() {
-            const code = document.getElementById('betaCode').value;
-            const message = document.getElementById('message');
+            const code = prompt("Wpisz kod beta:");
             const content = document.getElementById('content');
 
             if (code === "2332432") {
-                message.classList.add('hidden');
-                content.classList.remove('hidden');
+                document.body.style.visibility = 'visible'; // Ujawnij zawartość
+                content.style.display = 'block'; // Pokaż zawartość
             } else {
-                message.classList.remove('hidden');
+                alert("Niepoprawny kod!"); // Komunikat o błędzie
+                checkCode(); // Ponownie poproś o kod
             }
         }
+
+        // Wywołaj funkcję przy ładowaniu strony
+        window.onload = checkCode;
     </script>
 
 </body>
