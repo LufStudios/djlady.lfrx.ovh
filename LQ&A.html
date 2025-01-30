@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A - DJ Lady</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        input {
+            width: 300px;
+        }
+        button {
+            background-color: #ff4081;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e91e63;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Q&A - DJ Lady</h1>
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <p>Podkreślamy, że wszystkie dane w tej ankiecie będą zarządzane przez Lfrx Studios.</p>
+        <label>
+            <input type="checkbox" id="acceptCheckbox"> Akceptuję warunki
+        </label>
+        <br>
+        <button onclick="closePopup()">OK</button>
+    </div>
+
+    <input type="text" id="discordNick" placeholder="Nick na Discordzie" required>
+    <input type="text" id="question1" placeholder="Pytanie 1" required>
+    <input type="text" id="question2" placeholder="Pytanie 2" required>
+    <button onclick="submitQuestions()">Wyślij pytania</button>
+
+    <div class="footer">
+        <p>Copyright@ Lfrx 2025</p>
+    </div>
+
+    <script>
+        const webhookUrl = 'https://discord.com/api/webhooks/1334509090004668428/qjJQTsJ7P-bDyV3eeemYv-5HhRQ-Hjgb_6ZXrwGGiKu0O8AKNTGHZDGup6Iqx3RMR0zs'; // Twój webhook URL
+
+        // Wyświetlenie popupu przy ładowaniu strony
+        window.onload = function() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
+        };
+
+        function closePopup() {
+            if (document.getElementById('acceptCheckbox').checked) {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('popup').style.display = 'none';
+ } else {
+                alert('Musisz zaakceptować warunki, aby kontynuować.');
+            }
+        }
+
+        function submitQuestions() {
+            const discordNick = document.getElementById('discordNick').value;
+            const question1 = document.getElementById('question1').value;
+            const question2 = document.getElementById('question2').value;
+            const verificationId = generateVerificationId();
+
+            const messageContent = `Pytanie 1: ${question1}, Pytanie 2: ${question2}, Nick: ${discordNick}, ID weryfikacji: ${verificationId}`;
+
+            // Wysyłanie danych do webhooka
+            sendToWebhook({ content: messageContent });
+            alert(`Pytania zostały wysłane! Twój kod weryfikacyjny to: ${verificationId}. Dziękujemy za udział. I PAMIĘTAJ ABY WPISAĆ TEN KOD NA KANALE WERYFIKACJA QNA`);
+        }
+
+        function generateVerificationId() {
+            return Math.random().toString(36).substr(2, 9); // Generowanie losowego ID
+        }
+
+        function sendToWebhook(data) {
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Error response from webhook:', response);
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch(error => console.error('Error sending data to webhook:', error));
+        }
+    </script>
+</body>
+</html>
